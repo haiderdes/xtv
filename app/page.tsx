@@ -45,6 +45,7 @@ export default function VideoPlayer() {
 
         if (response.ok) {
           const data = await response.json()
+
           setVideos(data)
 
           if (data.length > 0) {
@@ -65,12 +66,16 @@ export default function VideoPlayer() {
     const seconds = Math.floor(time % 60)
 
     if (hours > 0) {
-      return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds
+      return `${hours}:${minutes
+        .toString()
+        .padStart(2, "0")}:${seconds
         .toString()
         .padStart(2, "0")}`
     }
 
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`
+    return `${minutes}:${seconds
+      .toString()
+      .padStart(2, "0")}`
   }
 
   const handlePlayPause = useCallback(() => {
@@ -107,11 +112,13 @@ export default function VideoPlayer() {
 
   const handleTimeUpdate = () => {
     if (!videoRef.current) return
+
     setCurrentTime(videoRef.current.currentTime)
   }
 
   const handleLoadedMetadata = () => {
     if (!videoRef.current) return
+
     setDuration(videoRef.current.duration)
   }
 
@@ -120,7 +127,8 @@ export default function VideoPlayer() {
   ) => {
     if (!progressRef.current || !videoRef.current) return
 
-    const rect = progressRef.current.getBoundingClientRect()
+    const rect =
+      progressRef.current.getBoundingClientRect()
 
     const pos = (e.clientX - rect.left) / rect.width
 
@@ -201,7 +209,9 @@ export default function VideoPlayer() {
   }, [])
 
   const progress =
-    duration > 0 ? (currentTime / duration) * 100 : 0
+    duration > 0
+      ? (currentTime / duration) * 100
+      : 0
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -212,10 +222,13 @@ export default function VideoPlayer() {
           </h1>
 
           <button
-            onClick={() => setShowPlaylist(!showPlaylist)}
+            onClick={() =>
+              setShowPlaylist(!showPlaylist)
+            }
             className="flex items-center gap-2 bg-primary/20 hover:bg-primary/30 px-4 py-2 rounded-lg transition-all"
           >
             <List size={20} />
+
             <span className="hidden sm:inline">
               قائمة التشغيل
             </span>
@@ -237,10 +250,16 @@ export default function VideoPlayer() {
                   className="w-full h-full object-contain"
                   onClick={handlePlayPause}
                   onTimeUpdate={handleTimeUpdate}
-                  onLoadedMetadata={handleLoadedMetadata}
+                  onLoadedMetadata={
+                    handleLoadedMetadata
+                  }
                   onEnded={playNext}
-                  onPlay={() => setIsPlaying(true)}
-                  onPause={() => setIsPlaying(false)}
+                  onPlay={() =>
+                    setIsPlaying(true)
+                  }
+                  onPause={() =>
+                    setIsPlaying(false)
+                  }
                   playsInline
                   preload="metadata"
                 />
@@ -248,7 +267,9 @@ export default function VideoPlayer() {
 
               <div
                 className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4 ${
-                  showControls ? "opacity-100" : "opacity-0"
+                  showControls
+                    ? "opacity-100"
+                    : "opacity-0"
                 }`}
               >
                 <div
@@ -258,7 +279,9 @@ export default function VideoPlayer() {
                 >
                   <div
                     className="h-full bg-primary rounded-full"
-                    style={{ width: `${progress}%` }}
+                    style={{
+                      width: `${progress}%`,
+                    }}
                   />
                 </div>
 
@@ -268,7 +291,9 @@ export default function VideoPlayer() {
                       <SkipBack size={20} />
                     </button>
 
-                    <button onClick={handlePlayPause}>
+                    <button
+                      onClick={handlePlayPause}
+                    >
                       {isPlaying ? (
                         <Pause size={24} />
                       ) : (
@@ -294,7 +319,9 @@ export default function VideoPlayer() {
                       max="1"
                       step="0.1"
                       value={isMuted ? 0 : volume}
-                      onChange={handleVolumeChange}
+                      onChange={
+                        handleVolumeChange
+                      }
                     />
 
                     <span>
@@ -303,7 +330,9 @@ export default function VideoPlayer() {
                     </span>
                   </div>
 
-                  <button onClick={toggleFullscreen}>
+                  <button
+                    onClick={toggleFullscreen}
+                  >
                     {isFullscreen ? (
                       <Minimize size={20} />
                     ) : (
@@ -334,7 +363,9 @@ export default function VideoPlayer() {
               </h3>
 
               <button
-                onClick={() => setShowPlaylist(false)}
+                onClick={() =>
+                  setShowPlaylist(false)
+                }
                 className="lg:hidden"
               >
                 <X size={20} />
@@ -345,19 +376,37 @@ export default function VideoPlayer() {
               {videos.map((video) => (
                 <button
                   key={video.id}
-                  onClick={() => playVideo(video)}
+                  onClick={() =>
+                    playVideo(video)
+                  }
                   className={`w-full flex gap-3 p-2 rounded-lg text-right ${
                     currentVideo?.id === video.id
                       ? "bg-primary/20"
                       : "hover:bg-zinc-800"
                   }`}
                 >
-                  <div className="w-32 h-20 bg-zinc-800 rounded-lg flex items-center justify-center">
-                    <Play size={24} />
+                  <div className="w-32 h-20 bg-zinc-800 rounded-lg overflow-hidden">
+                    {video.thumbnail ? (
+                      <img
+                        src={video.thumbnail}
+                        alt={video.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <Play size={24} />
+                      </div>
+                    )}
                   </div>
 
                   <div className="flex-1">
                     <h4>{video.title}</h4>
+
+                    {video.duration && (
+                      <p className="text-sm text-zinc-400 mt-1">
+                        {video.duration}
+                      </p>
+                    )}
                   </div>
                 </button>
               ))}

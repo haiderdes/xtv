@@ -225,7 +225,7 @@ export default function VideoPlayer() {
   />
 
   <h1 className="text-2xl font-bold text-primary">
-    مشغل الفيديو
+    مشاهدة التطبيق - XSAT
   </h1>
 </div>
 
